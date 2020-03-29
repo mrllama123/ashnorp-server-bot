@@ -14,9 +14,9 @@ docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t test-disc
 # tag image
 docker tag test-discord-bot:latest mrllama12/test-discord-bot:latest
 docker tag mrllama12/test-discord-bot:latest mrllama12/test-discord-bot:$version_tag
-
+docker login
 docker push mrllama12/test-discord-bot:latest
-docker push mrllama12/test-discord-bot:latest mrllama12/test-discord-bot:$version_tag
+docker push mrllama12/test-discord-bot:$version_tag
 # push image
 # docker push --disable-content-trust 192.168.1.22:5000/test-discord-bot:latest
 # docker push --disable-content-trust 192.168.1.22:5000/test-discord-bot:$version_tag 
