@@ -4,7 +4,10 @@ RUN apk add --update-cache \
   && rm -rf /var/cache/apk/*
 RUN pip install pipenv
 WORKDIR /app
-COPY bot /app
+COPY bot/ /app/bot
 COPY main.py /app
+COPY Pipfile /app
+COPY Pipfile.lock /app
+COPY startup.sh /app
 
 CMD [ "./startup.sh" ]
