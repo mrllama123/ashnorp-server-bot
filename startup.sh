@@ -1,2 +1,2 @@
 #!/bin/sh
-pipenv install  --deploy --ignore-pipfile && python main.py
+pipenv install  --system --deploy --ignore-pipfile && python main.py

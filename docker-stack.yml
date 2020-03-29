@@ -1,0 +1,4 @@
+version: '3'
+services: 
+    bot:
+        image: mrllama12/test-discord-bot:latest 
