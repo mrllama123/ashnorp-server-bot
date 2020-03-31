@@ -1,9 +1,12 @@
-version: '3'
-secrets:
-    token_discord_bot:
-        external: true
+version: '3.7'
+
 services: 
     bot:
         image: mrllama12/test-discord-bot:latest
-        env:
+        environment:
             ENV: prod
+        secrets:
+            - token_discord_bot
+secrets:
+    token_discord_bot:
+        external: true
