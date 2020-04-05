@@ -1,6 +1,6 @@
 import logging
 import os
-import discord
+
 import bot.bot_actions as bot
 # logging setup
 logging.basicConfig(level=logging.INFO)
