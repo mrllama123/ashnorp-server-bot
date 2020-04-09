@@ -20,6 +20,13 @@ async def on_ready():
     runs once client is connected to discord
     """
     log.info("sucessfully connected to discord as " + client.user.name)
+    # connext by defualt to genral voice channel
+    global voice_client_genral
+    guilds = client.guilds
+    for guild in guilds:
+        channels = guild.channels
+        voice_genral_channel = [channel for channel in channels if channel.name == "General" ][0]
+        voice_client_genral = await voice_genral_channel.connect()
 
 @client.event
 async def on_message(message):
@@ -33,7 +40,11 @@ async def on_message(message):
         else:
             await message.channel.send(str(value))
     elif message.content.lower().startswith("/wop"):
-        await wop_action(message)
+        await play_audio(message, "clearly.ogg")
+    elif message.content.lower() =="/goosebumps":
+        await play_audio(message, "Goosebumps Theme Song.mp3")
+    elif message.content.lower() == "/goosebumps woof":
+        await play_audio(message, "Goosebumps woof.mp3")
     elif  message.content.lower().startswith("/join voice"):
         await join_genral_voice_chat(message)  
     elif  message.content.lower().startswith("/diconnect voice"):
@@ -64,27 +75,20 @@ async def disconnect_genral_voice_chat(message):
         await voice_client_genral.disconnect()
         voice_client_genral = None
 
-async def wop_action(message):
+
+async def play_audio(message, audio_clip):
     """
-    joins a voice channel and play sound effect
+    play audio file bassed off audio_clip var
     :param message: the message object
+    :type message: Message
+    :param audio_clip: [description]
+    :type audio_clip: string
     """
     if voice_client_genral is not None and not voice_client_genral.is_playing():
-        log.info("playing wop sound ?")
+        log.info("playing " + audio_clip)
         dirname = os.path.dirname(__file__)
-        sound_filename = os.path.join(dirname, "sounds/clearly.ogg") 
+        sound_filename = os.path.join(dirname, "sounds", audio_clip) 
         voice_client_genral.play(discord.FFmpegPCMAudio(sound_filename)) 
-        while voice_client_genral.is_playing():
-            pass
-
-    # get a list of all channels in server
-    # channels = message.guild.channels
-    # get General voice chat
-    # voice_genral_channel = [channel for channel in channels if channel.name == "General" ][0]
-    # voice_channel =  await voice_genral_channel.connect()
-    # dirname = os.path.dirname(__file__)
-    # sound_filename = os.path.join(dirname, "sounds/clearly.ogg") 
-
 
 
 def dice_action(message):
