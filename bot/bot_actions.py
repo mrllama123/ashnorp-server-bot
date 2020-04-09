@@ -30,6 +30,22 @@ async def on_message(message):
             await message.channel.send("error with command `" + message.content + "` use `/roll <d4, d6, d8, d10, d12, d20>`")
         else:
             await message.channel.send(str(value))
+    elif message.content.lower().startswith("/wop"):
+        await wop_action(message)
+
+
+async def wop_action(message):
+    """
+    joins a voice channel and play sound effect
+    :param message: the message object
+    """
+    # get a list of all channels in server
+    channels = message.guild.channels
+    # get General voice chat
+    voice_channel = [channel for channel in channels if channel.name == "General" ][0]
+    
+    print("fdsklhbfdsuj")
+    
 
 
 def dice_action(message):
