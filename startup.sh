@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $ENV = "prod" ]; then
-    export TOKEN=$(cat /run/secrets/token_discord_bot) && pipenv install  --system --deploy --ignore-pipfile && python main.py
+    export TOKEN=$(cat /run/secrets/token_discord_bot) && python main.py
 else
-    pipenv install  --system --deploy --ignore-pipfile && python main.py
+    python main.py
 fi
