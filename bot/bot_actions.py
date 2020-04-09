@@ -8,11 +8,16 @@ client = discord.Client()
 
 voice_client_genral = None
 
+ffmpeg_options = {
+    'options': '-vn'
+}
+
 def start_bot(token):
     """
     starts the bot client
     """
     client.run(token)
+    discord.opus.load_opus()
 
 @client.event
 async def on_ready():
@@ -88,7 +93,7 @@ async def play_audio(message, audio_clip):
         log.info("playing " + audio_clip)
         dirname = os.path.dirname(__file__)
         sound_filename = os.path.join(dirname, "sounds", audio_clip) 
-        voice_client_genral.play(discord.FFmpegPCMAudio(sound_filename)) 
+        voice_client_genral.play(discord.FFmpegPCMAudio(sound_filename, **ffmpeg_options)) 
 
 
 def dice_action(message):
