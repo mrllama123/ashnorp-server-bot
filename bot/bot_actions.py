@@ -6,6 +6,8 @@ from random import randint
 log = logging.getLogger()
 client = discord.Client()
 
+voice_client_genral = None
+
 def start_bot(token):
     """
     starts the bot client
@@ -32,20 +34,57 @@ async def on_message(message):
             await message.channel.send(str(value))
     elif message.content.lower().startswith("/wop"):
         await wop_action(message)
+    elif  message.content.lower().startswith("/join voice"):
+        await join_genral_voice_chat(message)  
+    elif  message.content.lower().startswith("/diconnect voice"):
+        await disconnect_genral_voice_chat(message)  
 
+
+async def join_genral_voice_chat(message):
+    """
+    joins genral discord channel
+    :param message: message
+    """
+    global voice_client_genral
+    if voice_client_genral is None:
+        channels = message.guild.channels
+        voice_genral_channel = [channel for channel in channels if channel.name == "General" ][0]
+        voice_client_genral = await voice_genral_channel.connect()
+
+
+async def disconnect_genral_voice_chat(message):
+    """
+    disconnect genral discord channel
+    :param message: message
+    """
+    global voice_client_genral
+    channels = message.guild.channels
+    voice_genral_channel = [channel for channel in channels if channel.name == "General" ][0]
+    if voice_client_genral is not None:
+        await voice_client_genral.disconnect()
+        voice_client_genral = None
 
 async def wop_action(message):
     """
     joins a voice channel and play sound effect
     :param message: the message object
     """
+    if voice_client_genral is not None and not voice_client_genral.is_playing():
+        log.info("playing wop sound ?")
+        dirname = os.path.dirname(__file__)
+        sound_filename = os.path.join(dirname, "sounds/clearly.ogg") 
+        voice_client_genral.play(discord.FFmpegPCMAudio(sound_filename)) 
+        while voice_client_genral.is_playing():
+            pass
+
     # get a list of all channels in server
-    channels = message.guild.channels
+    # channels = message.guild.channels
     # get General voice chat
-    voice_channel = [channel for channel in channels if channel.name == "General" ][0]
-    
-    print("fdsklhbfdsuj")
-    
+    # voice_genral_channel = [channel for channel in channels if channel.name == "General" ][0]
+    # voice_channel =  await voice_genral_channel.connect()
+    # dirname = os.path.dirname(__file__)
+    # sound_filename = os.path.join(dirname, "sounds/clearly.ogg") 
+
 
 
 def dice_action(message):
