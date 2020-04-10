@@ -1,0 +1,28 @@
+name: docker build and publish
+on:
+#   push:
+#     branches: [ master ]
+  release:
+  push:
+    types: published
+    tags: v*
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: get tags 
+      run: |
+         git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+    - name: Docker Buildx
+      uses: crazy-max/ghaction-docker-buildx@v1.3.0
+      with:
+        platforms: linux/amd64,linux/arm/v7  
+    - name: docker login
+      run: |
+        docker login 
+    - name: Run Buildx
+      run: |
+        docker buildx build \
+        --platform linux/amd64,linux/arm/v7 \
+         
