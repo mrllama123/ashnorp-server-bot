@@ -12,6 +12,8 @@ ffmpeg_options = {
     'options': '-vn'
 }
 
+env = os.getenv("ENV")
+
 def start_bot(token):
     """
     starts the bot client
@@ -38,23 +40,28 @@ async def on_message(message):
     """
     main fucntion that gets ran everytime a message is sent to bot
     """
+    if env == "test":
+        test_command = "test-"
+    else:
+        test_command = ""
+
     if message.content.lower().startswith("/roll"):
         value = dice_action(message)
         if value is None:
             await message.channel.send("error with command `" + message.content + "` use `/roll <d4, d6, d8, d10, d12, d20>`")
         else:
             await message.channel.send(str(value))
-    elif message.content.lower().startswith("/wop"):
+    elif message.content.lower().startswith("/" + test_command + "wop"):
         await play_audio(message, "clearly.ogg")
-    elif message.content.lower() =="/goosebumps":
+    elif message.content.lower() =="/" + test_command + "goosebumps":
         await play_audio(message, "Goosebumps Theme Song.mp3")
-    elif message.content.lower() == "/goosebumps woof":
+    elif message.content.lower() == "/" + test_command + "goosebumps woof":
         await play_audio(message, "Goosebumps woof.mp3")
-    elif message.content.lower() == "/stonks":
+    elif message.content.lower() == "/" + test_command + "stonks":
         await play_audio(message, "stonks.mp3")
-    elif  message.content.lower().startswith("/join voice"):
+    elif  message.content.lower().startswith("/" + test_command + "join voice"):
         await join_genral_voice_chat(message)  
-    elif  message.content.lower().startswith("/diconnect voice"):
+    elif  message.content.lower().startswith("/" + test_command + "diconnect voice"):
         await disconnect_genral_voice_chat(message)  
 
 
