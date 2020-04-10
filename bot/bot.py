@@ -9,7 +9,7 @@ log = logging.getLogger()
 client = discord.Client()
 dirname = os.path.dirname(__file__)
 env = os.getenv("ENV")
-bot = commands.Bot(command_prefix='$')
+bot = commands.Bot(command_prefix='/')
 
 ffmpeg_options = {
     'options': '-vn'
@@ -18,7 +18,7 @@ ffmpeg_options = {
 def start_bot(token):
 
     if env == "test":
-        bot.command_prefix = "$test-"
+        bot.command_prefix = "/test-"
     bot.run(token)
     opus.load_opus()
 
