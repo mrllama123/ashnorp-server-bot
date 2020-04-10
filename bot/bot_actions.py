@@ -50,6 +50,8 @@ async def on_message(message):
         await play_audio(message, "Goosebumps Theme Song.mp3")
     elif message.content.lower() == "/goosebumps woof":
         await play_audio(message, "Goosebumps woof.mp3")
+    elif message.content.lower() == "/stonks":
+        await play_audio(message, "stonks.mp3")
     elif  message.content.lower().startswith("/join voice"):
         await join_genral_voice_chat(message)  
     elif  message.content.lower().startswith("/diconnect voice"):
