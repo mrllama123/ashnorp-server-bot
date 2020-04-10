@@ -11,18 +11,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: get tags 
-      run: |
-         git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+#     - name: get tags 
+#       run: |
+#          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+    - name: get tag
+      run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF:10}
     - name: Docker Buildx
       uses: crazy-max/ghaction-docker-buildx@v1.3.0
       with:
         platforms: linux/amd64,linux/arm/v7  
-    - name: docker login
+    - name: docker login -u ${{ secrets. DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       run: |
         docker login 
     - name: Run Buildx
       run: |
         docker buildx build \
         --platform linux/amd64,linux/arm/v7 \
-         
+        -t mrllama12/test-discord-bot:latest \ 
+        -t mrllama12/test-discord-bot:${{ env.RELEASE_VERSION }} \
+         --push \
+         --file Dockerfile
