@@ -1,7 +1,7 @@
 import logging
 import os
 
-import bot.bot_actions as bot
+import bot.bot as bot
 # logging setup
 logging.basicConfig(level=logging.INFO)
 token = os.getenv("TOKEN")
