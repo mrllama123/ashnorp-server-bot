@@ -9,6 +9,7 @@ pylint = "*"
 [packages]
 discord-py = "*"
 pynacl = "*"
+youtube-dl = "*"
 
 [requires]
 python_version = "3.8"
