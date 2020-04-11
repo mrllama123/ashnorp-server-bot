@@ -3,6 +3,7 @@ import os
 from discord.ext import commands
 from discord import FFmpegPCMAudio, PCMVolumeTransformer
 from bot.constants import *
+from bot.ytdl_source import YTDLSource
 
 log = logging.getLogger()
 dirname = os.path.dirname(__file__)
@@ -18,25 +19,38 @@ class Music(commands.Cog):
     async def wop(self, ctx):
         voice_clients = ctx.box.voice_clients
         for voice_client in voice_clients:
-            await self.play_audio(voice_client, "clearly.ogg")
+            await self.play_audio_local(voice_client, "clearly.ogg")
 
     @commands.command()
     async def stonks(self, ctx):
         voice_clients = ctx.bot.voice_clients
         for voice_client in voice_clients:
-            await self.play_audio(voice_client, "stonks.mp3")
+            await self.play_audio_local(voice_client, "stonks.mp3")
     
     @commands.command()
     async def goosebumps(self, ctx, *args):
         voice_clients = ctx.bot.voice_clients
         if any(arg in ["woof", "dog"] for arg in args):
             for voice_client in voice_clients:
-                await self.play_audio(voice_client, "Goosebumps woof.mp3", 0.4)
+                await self.play_audio_local(voice_client, "Goosebumps woof.mp3", 0.4)
         else:
             for voice_client in voice_clients:
-                await self.play_audio(voice_client, "Goosebumps Theme Song.mp3", 0.4)
+                await self.play_audio_local(voice_client, "Goosebumps Theme Song.mp3", 0.4)
+    
 
-    async def play_audio(self, voice_client, sound_file, volume=0.5):
+    @commands.command()
+    async def stream(self, ctx, *, url):
+        """
+        streams a youtube clip (or anything else that youtube dl can play)
+        :param ctx: context object
+        :param url: the url for the clip
+        """
+        async with ctx.typing():
+            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            ctx.voice_client.play(player)
+        await ctx.send('Now playing: {}'.format(player.title))
+
+    async def play_audio_local(self, voice_client, sound_file, volume=0.5):
         """
         plays audio in voice channel
         :param voice_client: voice client object

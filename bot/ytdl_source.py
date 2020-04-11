@@ -1,11 +1,11 @@
 import asyncio
 import youtube_dl
-from discord import FFmpegPCMAudio
+from discord import FFmpegPCMAudio, PCMVolumeTransformer
 from bot.constants import *
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
-class YTDLSource(discord.PCMVolumeTransformer):
+class YTDLSource(PCMVolumeTransformer):
     def __init__(self, source, *, data, volume=0.5):
         super().__init__(source, volume)
 
