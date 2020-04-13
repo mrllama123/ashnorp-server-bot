@@ -17,7 +17,7 @@ class Music(commands.Cog):
     
     @commands.command()
     async def wop(self, ctx):
-        voice_clients = ctx.box.voice_clients
+        voice_clients = ctx.bot.voice_clients
         for voice_client in voice_clients:
             await self.play_audio_local(voice_client, "clearly.ogg")
 
