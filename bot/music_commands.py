@@ -1,7 +1,7 @@
 import logging
 import os 
 from discord.ext import commands
-from discord import FFmpegPCMAudio, PCMVolumeTransformer
+from discord import FFmpegPCMAudio, PCMVolumeTransformer, VoiceChannel
 from bot.constants import *
 from bot.ytdl_source import YTDLSource
 
@@ -17,26 +17,47 @@ class Music(commands.Cog):
     
     @commands.command()
     async def wop(self, ctx):
-        voice_clients = ctx.bot.voice_clients
-        for voice_client in voice_clients:
-            await self.play_audio_local(voice_client, "clearly.ogg")
+        await self.play_audio_local(ctx.voice_client, "clearly.ogg")
 
     @commands.command()
     async def stonks(self, ctx):
-        voice_clients = ctx.bot.voice_clients
-        for voice_client in voice_clients:
-            await self.play_audio_local(voice_client, "stonks.mp3")
+        await self.play_audio_local(ctx.voice_client, "stonks.mp3")
     
     @commands.command()
     async def goosebumps(self, ctx, *args):
-        voice_clients = ctx.bot.voice_clients
         if any(arg in ["woof", "dog"] for arg in args):
-            for voice_client in voice_clients:
-                await self.play_audio_local(voice_client, "Goosebumps woof.mp3", 0.4)
+            await self.play_audio_local(ctx.voice_client, "Goosebumps woof.mp3", 0.4)
         else:
-            for voice_client in voice_clients:
-                await self.play_audio_local(voice_client, "Goosebumps Theme Song.mp3", 0.4)
+            await self.play_audio_local(ctx.voice_client, "Goosebumps Theme Song.mp3", 0.4)
     
+    @commands.command()
+    async def join(self, ctx, *, channel: VoiceChannel):
+        """Joins a voice channel"""
+
+        if ctx.voice_client is not None:
+            return await ctx.voice_client.move_to(channel)
+        await channel.connect()
+
+    @commands.command()
+    async def disconect(self, ctx):
+        """Stops and disconnects the bot from voice"""
+        if ctx.voice_client.is_playing():
+            ctx.voice_client.stop()
+        await ctx.voice_client.disconnect()
+
+    @commands.command()
+    async def volume(self, ctx, volume: int):
+        """Changes the player's volume"""
+        if ctx.voice_client is None:
+            return await ctx.send("Not connected to a voice channel.")
+        else:
+            if not ctx.voice_client.source is None:
+                ctx.voice_client.source.volume = volume / 100
+                await ctx.send("Changed volume to {}%".format(volume))
+            else:
+                await ctx.send("No audio playing")
+
+
 
     @commands.command()
     async def stream(self, ctx, *, url):
@@ -60,3 +81,17 @@ class Music(commands.Cog):
             sound_filename = os.path.join(dirname, "sounds", sound_file)
             sound_source = PCMVolumeTransformer(FFmpegPCMAudio(sound_filename, **ffmpeg_options), volume=volume)        
             voice_client.play(sound_source)
+
+    @stream.before_invoke
+    @wop.before_invoke
+    @stonks.before_invoke
+    @goosebumps.before_invoke
+    async def ensure_voice(self, ctx):
+        if ctx.voice_client is None:
+            if ctx.author.voice:
+                await ctx.author.voice.channel.connect()
+            else:
+                await ctx.send("You are not connected to a voice channel.")
+                raise commands.CommandError("Author not connected to a voice channel.")
+        elif ctx.voice_client.is_playing():
+            ctx.voice_client.stop()

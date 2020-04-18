@@ -23,9 +23,3 @@ def start_bot(token):
 @bot.event
 async def on_ready():
     log.info("bot ready")
-    guilds = bot.guilds
-    for guild in guilds:
-        channels = guild.channels
-        voice_genral_channel = [channel for channel in channels if channel.name == "General" ][0]
-        await voice_genral_channel.connect()
-
