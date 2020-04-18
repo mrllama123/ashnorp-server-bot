@@ -50,11 +50,12 @@ class Music(commands.Cog):
         """Changes the player's volume"""
         if ctx.voice_client is None:
             return await ctx.send("Not connected to a voice channel.")
-        if not ctx.voice_client.source is None:
-            ctx.voice_client.source.volume = volume / 100
-            await ctx.send("Changed volume to {}%".format(volume))
         else:
-            await ctx.send("Not connected to a voice channel.")
+            if not ctx.voice_client.source is None:
+                ctx.voice_client.source.volume = volume / 100
+                await ctx.send("Changed volume to {}%".format(volume))
+            else:
+                await ctx.send("No audio playing")
 
 
 
