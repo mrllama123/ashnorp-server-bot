@@ -30,7 +30,11 @@ class Music(commands.Cog, name="audio"):
         else:
             await self.play_audio_local(ctx.voice_client, "Goosebumps Theme Song.mp3", 0.4)
     
-    @commands.command(help="Joins a voice channel by join <vc name>")
+    @commands.command(help="play gun sound")
+    async def gun(self, ctx):
+        await self.play_audio_local(ctx.voice_client, "shotgun-reload.mp3")
+
+    @commands.command(help="Joins a voice channel by join <vc name> or if you are already in it")
     async def join(self, ctx, *, channel: VoiceChannel):
         """Joins a voice channel"""
 
